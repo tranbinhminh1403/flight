@@ -2,17 +2,11 @@ package com.project.flightbooking.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
-
 @Data
-public class ProfileDTO {
-    private Long userId;
+public class RegisterRequest {
     private String username;
+    private String password;
     private String email;
     private String phoneNumber;
     private String initialAirport;
-    private String role;
-    private List<BookingDTO> bookings;
-    private Integer points;
 } 

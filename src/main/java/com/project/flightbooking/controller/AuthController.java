@@ -45,17 +45,18 @@ public class AuthController {
         } catch (AuthenticationException e) {
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(new AuthResponse("Authentication failed: " + e.getMessage(), null));
+                .body(new AuthResponse("Authentication failed: " + e.getMessage(), null, null));
         }
 
         try {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
             final String token = jwtTokenUtil.generateToken(userDetails);
-            return ResponseEntity.ok(new AuthResponse("Login successful", token));
+            User user = userService.findByUsername(loginRequest.getUsername());
+            return ResponseEntity.ok(new AuthResponse("Login successful", token, user.getPoints()));
         } catch (UsernameNotFoundException e) {
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(new AuthResponse(e.getMessage(), null));
+                .body(new AuthResponse(e.getMessage(), null, null));
         }
     }
 } 

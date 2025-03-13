@@ -120,6 +120,7 @@ public class UserController {
         dto.setEmail(user.getEmail());
         dto.setPhoneNumber(user.getPhoneNumber());
         dto.setInitialAirport(user.getInitialAirport());
+        dto.setPoints(user.getPoints());
         dto.setBookings(user.getBookings().stream()
                 .map(this::convertToBookingDTO)
                 .collect(Collectors.toList()));

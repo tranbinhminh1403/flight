@@ -15,4 +15,5 @@ public class BookingDTO {
     private String status;
     private BigDecimal totalPrice;
     private String paymentStatus;
+    private Integer updatedPoints;
 } 

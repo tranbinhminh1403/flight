@@ -33,6 +33,9 @@ public class User {
     @Column(nullable = false)
     private String status = "ACTIVE"; // Default value
 
+    @Column(nullable = false)
+    private Integer points = 0; // Default value
+
     public Long getUserId() {
         return userId;
     }

@@ -59,7 +59,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/authenticate", "/api/register", 
-                               "/api/airlines/**", "/api/flights/**").permitAll()
+                               "/api/airlines/**", "/api/flights/**",
+                               "/api/guest/**").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
                 .anyRequest().authenticated()
             )

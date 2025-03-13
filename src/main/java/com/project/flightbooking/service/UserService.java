@@ -22,12 +22,14 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        // Hash the password before saving
-        String hashedPassword = passwordEncoder.encode(user.getPasswordHash());
-        user.setPasswordHash(hashedPassword);
-        // Set default role if not provided
-        if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("USER");
+        // Only hash password for new users (during registration)
+        if (user.getUserId() == null) {
+            String hashedPassword = passwordEncoder.encode(user.getPasswordHash());
+            user.setPasswordHash(hashedPassword);
+            // Set default role if not provided
+            if (user.getRole() == null || user.getRole().isEmpty()) {
+                user.setRole("USER");
+            }
         }
         return userRepository.save(user);
     }
@@ -87,5 +89,11 @@ public class UserService {
         String newHashedPassword = passwordEncoder.encode(newPassword);
         user.setPasswordHash(newHashedPassword);
         userRepository.save(user);
+    }
+
+    // Add a new method specifically for updating points
+    public User updatePoints(User user, int pointsToAdd) {
+        user.setPoints(user.getPoints() + pointsToAdd);
+        return userRepository.save(user);
     }
 } 
