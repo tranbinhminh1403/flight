@@ -31,4 +31,7 @@ public class Booking {
     private String status;
     private BigDecimal totalPrice;
     private String paymentStatus;
+    
+    private String paypalOrderId;
+    private String paymentUrl;
 } 

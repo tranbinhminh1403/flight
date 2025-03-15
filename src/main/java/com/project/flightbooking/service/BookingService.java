@@ -11,6 +11,7 @@ import com.project.flightbooking.entity.Flight;
 import com.project.flightbooking.entity.User;
 import com.project.flightbooking.repository.BookingRepository;
 import com.project.flightbooking.dto.BookingRequest;
+import com.project.flightbooking.dto.PayPalOrderResponse;
 
 @Service
 public class BookingService {
@@ -28,6 +29,9 @@ public class BookingService {
 
     @Autowired
     private DiscountService discountService;
+
+    @Autowired
+    private PayPalService payPalService;
 
     public Booking createBooking(String username, Long flightId, String seatClass, Integer points) {
         Flight flight = flightService.getFlightById(flightId);
@@ -53,6 +57,15 @@ public class BookingService {
         booking.setPaymentStatus("UNPAID");
         booking.setBookingDate(LocalDateTime.now());
         booking.setTotalPrice(BigDecimal.valueOf(finalPrice));
+        
+        // Create PayPal order
+        PayPalOrderResponse paypalResponse = payPalService.createOrder(booking.getTotalPrice());
+        booking.setPaypalOrderId(paypalResponse.getId());
+        booking.setPaymentUrl(paypalResponse.getLinks().stream()
+            .filter(link -> "payer-action".equals(link.getRel()))
+            .findFirst()
+            .map(PayPalOrderResponse.PayPalLink::getHref)
+            .orElse(null));
         
         return bookingRepository.save(booking);
     }

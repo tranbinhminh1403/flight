@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DiscountService {
     private static final int BRONZE_THRESHOLD = 10000;
-    private static final int SILVER_THRESHOLD = 50000;
-    private static final int GOLD_THRESHOLD = 100000;
+    private static final int SILVER_THRESHOLD = 20000;
+    private static final int GOLD_THRESHOLD = 50000;
 
     private static final double BASE_DISCOUNT = 0.10; // 10%
     private static final double BRONZE_DISCOUNT = 0.15; // 15%

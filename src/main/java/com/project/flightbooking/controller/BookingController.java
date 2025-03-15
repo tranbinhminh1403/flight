@@ -57,6 +57,7 @@ public class BookingController {
         dto.setTotalPrice(booking.getTotalPrice());
         dto.setPaymentStatus(booking.getPaymentStatus());
         dto.setUpdatedPoints(booking.getUser().getPoints());
+        dto.setPaymentUrl(booking.getPaymentUrl());
         return dto;
     }
 } 
