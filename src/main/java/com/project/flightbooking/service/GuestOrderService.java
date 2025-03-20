@@ -10,6 +10,7 @@ import com.project.flightbooking.entity.Flight;
 import com.project.flightbooking.service.FlightService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class GuestOrderService {
@@ -72,5 +73,15 @@ public class GuestOrderService {
     public GuestOrder getOrderById(Long id) {
         return orderRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+    }
+
+    public List<GuestOrder> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    public GuestOrder updatePaymentStatus(Long orderId) {
+        GuestOrder order = getOrderById(orderId);
+        order.setPaymentStatus("PAID");
+        return orderRepository.save(order);
     }
 } 

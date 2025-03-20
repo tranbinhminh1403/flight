@@ -33,4 +33,6 @@ public class GuestOrder {
     private BigDecimal price;
     private LocalDateTime orderDate;
     private String seatClass; // ECONOMY, BUSINESS, FIRST_CLASS
+    
+    private String paymentStatus = "UNPAID"; // Default value
 } 
