@@ -8,10 +8,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.project.flightbooking.dto.PayPalOrderResponse;
 import com.project.flightbooking.repository.BookingRepository;
 import com.project.flightbooking.entity.Booking;
+import com.project.flightbooking.repository.GuestOrderRepository;
+import com.project.flightbooking.entity.GuestOrder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,6 +41,9 @@ public class PayPalService {
 
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private GuestOrderRepository guestOrderRepository;
 
     public PayPalOrderResponse createOrder(BigDecimal amount) {
         String url = paypalApiUrl + "/v2/checkout/orders";
@@ -72,6 +78,10 @@ public class PayPalService {
         
         try {
             return restTemplate.postForObject(url, entity, PayPalOrderResponse.class);
+        } catch (HttpClientErrorException e) {
+            String errorDetails = String.format("PayPal API error: Status %s, Response: %s", 
+                e.getStatusCode(), e.getResponseBodyAsString());
+            throw new RuntimeException(errorDetails);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create PayPal order: " + e.getMessage());
         }
@@ -88,5 +98,17 @@ public class PayPalService {
         booking.setPaymentStatus("PAID");
         booking.setStatus("CONFIRMED");
         bookingRepository.save(booking);
+    }
+
+    public void confirmGuestPayment(String paypalOrderId) {
+        GuestOrder order = guestOrderRepository.findByPaypalOrderId(paypalOrderId)
+            .orElseThrow(() -> new RuntimeException("No guest order found for PayPal order ID: " + paypalOrderId));
+        
+        if ("PAID".equals(order.getPaymentStatus())) {
+            throw new RuntimeException("Payment already confirmed for this order");
+        }
+        
+        order.setPaymentStatus("PAID");
+        guestOrderRepository.save(order);
     }
 } 

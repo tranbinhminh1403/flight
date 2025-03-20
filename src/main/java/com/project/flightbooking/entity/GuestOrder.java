@@ -34,5 +34,7 @@ public class GuestOrder {
     private LocalDateTime orderDate;
     private String seatClass; // ECONOMY, BUSINESS, FIRST_CLASS
     
+    private String paypalOrderId;
+    private String paymentUrl;
     private String paymentStatus = "UNPAID"; // Default value
 } 

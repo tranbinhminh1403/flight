@@ -84,4 +84,8 @@ public class GuestOrderService {
         order.setPaymentStatus("PAID");
         return orderRepository.save(order);
     }
+
+    public GuestOrder updateOrder(GuestOrder order) {
+        return orderRepository.save(order);
+    }
 } 
