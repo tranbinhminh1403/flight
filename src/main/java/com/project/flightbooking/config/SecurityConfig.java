@@ -60,7 +60,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/authenticate", "/api/register", 
                                "/api/airlines/**", "/api/flights/**",
-                               "/api/guest/**").permitAll()
+                               "/api/guest/**", "/api/paypal/confirm").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
                 .anyRequest().authenticated()
             )

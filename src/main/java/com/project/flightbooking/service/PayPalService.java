@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.project.flightbooking.dto.PayPalOrderResponse;
+import com.project.flightbooking.repository.BookingRepository;
+import com.project.flightbooking.entity.Booking;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class PayPalService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private BookingRepository bookingRepository;
 
     public PayPalOrderResponse createOrder(BigDecimal amount) {
         String url = paypalApiUrl + "/v2/checkout/orders";
@@ -70,5 +75,18 @@ public class PayPalService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to create PayPal order: " + e.getMessage());
         }
+    }
+
+    public void confirmPayment(String paypalOrderId) {
+        Booking booking = bookingRepository.findByPaypalOrderId(paypalOrderId)
+            .orElseThrow(() -> new RuntimeException("No booking found for PayPal order ID: " + paypalOrderId));
+        
+        if ("PAID".equals(booking.getPaymentStatus())) {
+            throw new RuntimeException("Payment already confirmed for this booking");
+        }
+        
+        booking.setPaymentStatus("PAID");
+        booking.setStatus("CONFIRMED");
+        bookingRepository.save(booking);
     }
 } 
